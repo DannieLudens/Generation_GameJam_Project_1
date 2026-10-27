@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class HUDJuego : MonoBehaviour
 {
-    [Header("Tiempo")]
     public Image panelTiempo;
     public Text textoTiempo;
     public Text textoTarde;
@@ -14,25 +13,20 @@ public class HUDJuego : MonoBehaviour
     public Color colorTiempoCritico;
     public GameObject vinetaRoja;
 
-    [Header("Metros")]
     public Text textoRecorrido;
 
-    [Header("Memorandos")]
     public Image[] memos;
     public Sprite spriteMemoVacio;
     public Sprite spriteMemoSellado;
 
-    [Header("Calendario")]
     public Text textoNumeroDia;
 
-    [Header("Popups")]
     public GameObject plantillaPopup;
     public Sprite iconoSuma;
     public Sprite iconoResta;
     public Color colorSuma;
     public Color colorResta;
 
-    [Header("A tiempo")]
     public GameObject avisoATiempo;
     public GameObject vinetaVerde;
     public Text textoATiempo;
