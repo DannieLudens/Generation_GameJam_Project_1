@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 83616a21854e014478d4539eb274a5cb
+guid: b8de80d4e61db3743991b1361e631652
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8021377286621359041
-    second: Sello_Despedido_0
+      213: -6478581591714206008
+    second: Texto_ATiempo_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 2
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Sello_Despedido_0
+      name: Texto_ATiempo_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1205
-        height: 242
+        width: 1010
+        height: 189
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1cbe372a428a15f60800000000000000
-      internalID: 8021377286621359041
+      spriteID: 8ce6d790e547716a0800000000000000
+      internalID: -6478581591714206008
       vertices: []
       indices: 
       edges: []
