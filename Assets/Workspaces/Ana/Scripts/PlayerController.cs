@@ -7,16 +7,16 @@ public class PlayerController : MonoBehaviour
     public InputAction rightAction;
     public InputAction jumpAction;
     private Rigidbody rb;
-    private float xMin = 5;
-    private float xMax = 25;
-    private float xChange = 10;
+    private float xMin = -2;
+    private float xMax = 6;
+    private float xChange = 4;
     public float gravityModifier = 10;
     public float jumpForce = 40;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        transform.position = new Vector3((xMin + xMax) / 2, 0f, 0f);
+        transform.position = new Vector3((xMin + xMax) / 2, -0.02791834f, 0.44f);
         leftAction.Enable();
         rightAction.Enable();
         rb = GetComponent<Rigidbody>();
