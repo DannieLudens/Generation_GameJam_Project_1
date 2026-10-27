@@ -15,6 +15,9 @@ public class MoveBackward : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //verifies if game is over. If it is, then no more prefabs would be created, 
+        if (PlayerController.gameOver) return;
+
         // Move constantly in z axis.
         transform.Translate(Vector3.back * speed * Time.deltaTime, Space.World);
 

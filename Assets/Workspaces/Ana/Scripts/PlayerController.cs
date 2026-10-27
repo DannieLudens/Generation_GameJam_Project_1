@@ -18,7 +18,9 @@ public class PlayerController : MonoBehaviour
     private float discountChair = 2f;
     private float discountLover = 4f;
     private float discountCoffeeMachine = 3f;
-    private bool gameOver = false;
+    public static bool gameOver = false;
+    public float distance;
+    public float speed = 15f; //Based on MoveBackward script. 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -38,23 +40,31 @@ public class PlayerController : MonoBehaviour
         //Character moves based on input
         ChangeLine();
 
-        //Character jumps based on input.
+        //Character jumps based on input and if he's touching the floor. 
         if (jumpAction.triggered && isOnFloor)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isOnFloor = false;
         }
 
+        //timer decreases 1 per second.
+        timer -= Time.deltaTime;
+        //Debug.Log("Tiempo: " + Mathf.CeilToInt(timer))
+
+        //calculates distance:
+        distance =+ speed * Time.deltaTime;
+
+
+        //GameOver
         if (timer <= 0f)
         {
             timer = 0f;
             gameOver = true;
-            Debug.Log("¡Game Over!");
+            Debug.Log("¡Game Over! + " + distance);
+
         }
 
-        //timer decreases 1 per second.
-        timer -= Time.deltaTime;
-        //Debug.Log("Tiempo: " + Mathf.CeilToInt(timer))
+        
     }
 
     private void OnCollisionEnter(Collision collision)

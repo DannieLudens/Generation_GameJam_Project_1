@@ -10,6 +10,7 @@ public class RewindSpawner : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (PlayerController.gameOver) return;
         //Spawn Obstacle based on startDelay and 
         InvokeRepeating("SpawnClocks", startDelay, spawnInterval);
     }

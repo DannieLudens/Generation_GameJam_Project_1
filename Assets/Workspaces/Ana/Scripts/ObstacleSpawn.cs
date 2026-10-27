@@ -11,10 +11,10 @@ public class ObstacleSpawn : MonoBehaviour
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
-    {   
-        //Spawn Obstacle based on startDelay and 
+    {
+        if (PlayerController.gameOver) return;
+        //Spawn Obstacle based on startDelay and spawnInterval
         InvokeRepeating("SpawnRandomObstacle", startDelay, spawnInterval);
-
 
     }
 
