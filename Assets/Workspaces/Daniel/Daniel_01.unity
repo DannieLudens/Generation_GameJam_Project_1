@@ -263,6 +263,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6687465933331541052, guid: daf0a33818ff199429a004df1f85f76a, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: f9774a659ef0e6f4c920ed3c73291eb5, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -270,6 +274,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100586268782308604, guid: daf0a33818ff199429a004df1f85f76a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 990559286}
+    - targetCorrespondingSourceObject: {fileID: 100586268782308604, guid: daf0a33818ff199429a004df1f85f76a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 990559287}
   m_SourcePrefab: {fileID: 100100000, guid: daf0a33818ff199429a004df1f85f76a, type: 3}
 --- !u!1 &990559285 stripped
 GameObject:
@@ -373,6 +380,29 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &990559287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990559285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5689d8dc8802384f9c6031cc0850198, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioPlayerFootsteps
+  footstepClips:
+  - {fileID: 8300000, guid: ee250308a1ee6184da5eeff457fcb7f6, type: 3}
+  minPitch: 0.5
+  maxPitch: 1.1
+  minPitchJump: 0.08
+  footPitchOffset: 0.05
+  minVolume: 0.8
+  maxVolume: 1
+  useTimer: 0
+  stepInterval: 0.32
+  characterController: {fileID: 0}
 --- !u!1 &1254968716
 GameObject:
   m_ObjectHideFlags: 0
