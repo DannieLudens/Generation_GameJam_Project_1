@@ -18,6 +18,7 @@ public class MoveBackward : MonoBehaviour
         // Move constantly in z axis.
         transform.Translate(Vector3.back * speed * Time.deltaTime, Space.World);
 
+        //adds a rotation in z axis, so it looks prettier. 
         transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.Self);
 
         // Destroy object if it pass zLimite

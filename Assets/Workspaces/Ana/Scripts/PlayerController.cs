@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityPipeline.Microsoft.CodeAnalysis;
 
 public class PlayerController : MonoBehaviour
 {
@@ -42,7 +43,13 @@ public class PlayerController : MonoBehaviour
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isOnFloor = false;
+        }
 
+        if (timer <= 0f)
+        {
+            timer = 0f;
+            gameOver = true;
+            Debug.Log("¡Game Over!");
         }
 
         //timer decreases 1 per second.
@@ -88,30 +95,38 @@ public class PlayerController : MonoBehaviour
     //Check colision with obstacles and subtract time.
     private void OnTriggerEnter(Collider other)
     {
-        string nameObject = other.gameObject.name;
+        // Verifies if object is a clock trying to find its script "Rewind".
 
-        Debug.Log("Trigger detectado con el objeto: " + other.gameObject.name);
+        if (other.TryGetComponent<Rewinds>(out Rewinds clock))
+        {
+            timer += clock.secondsGained;
+            Debug.Log($"¡Reloj recogido! +{clock.secondsGained}s. Tiempo actual: {timer}s");
+
+            return; // there is no need to continue. It is either clock or obstacle.
+        }
 
         // check the name
+        string nameObject = other.gameObject.name;
+
         if (nameObject.Contains("Chair") || nameObject.Contains("Chair"))
         {
-            timer -= discountCoffeeMachine; ;
+            timer -= discountChair; ;
             other.enabled = false; // we don't want to substract more than one time. 
-            //Debug.Log($"¡Chocaste con Silla! -{2}s. Tiempo restante: {timer}");
+            Debug.Log($"¡Chocaste con Silla! -{2}s. Tiempo restante: {timer}");
         }
         else if (nameObject.Contains("Lover"))
         {
             timer -= discountLover;
             other.enabled = false;
-            //Debug.Log($"¡Chocaste con Lover! -{4}s. Tiempo restante: {timer}");
+            Debug.Log($"¡Chocaste con Lover! -{4}s. Tiempo restante: {timer}");
         }
-        else if (nameObject.Contains("Coffee_Machine"))
+        else if (nameObject.Contains("Coffee_machine"))
         {
             timer -= discountCoffeeMachine;
             other.enabled = false;
-            //Debug.Log($"¡Chocaste con CoffeMachine! -{3}s. Tiempo restante: {timer}s");
+            Debug.Log($"¡Chocaste con CoffeMachine! -{3}s. Tiempo restante: {timer}s");
         }
-
+        
     }
 
     

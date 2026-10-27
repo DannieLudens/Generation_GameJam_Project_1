@@ -6,22 +6,22 @@ public class ObstacleSpawn : MonoBehaviour
     //public int obstacleIndex;
     private float startDelay = 3;
     private float spawnInterval = 1.5f;
+    public float rotationSpeed = 90;
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {   
-        //calculate point x from centerLine based on leftLine and rightLine
-        
-
         //Spawn Obstacle based on startDelay and 
         InvokeRepeating("SpawnRandomObstacle", startDelay, spawnInterval);
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
     void SpawnRandomObstacle()
