@@ -1809,7 +1809,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "Enter / Esc  volver al t\xEDtulo"
+  m_Text: "Enter / Esc  volver a la p\xE1gina principal"
 --- !u!222 &810610392
 CanvasRenderer:
   m_ObjectHideFlags: 0
