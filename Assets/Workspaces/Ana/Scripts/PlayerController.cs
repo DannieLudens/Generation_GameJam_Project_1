@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     private float xChange = 4;
     public float gravityModifier = 10;
     public float jumpForce = 40;
+    public bool isOnFloor = true;
     private float timer = 60;
     private float discountChair = 2f;
     private float discountLover = 4f;
@@ -37,17 +38,21 @@ public class PlayerController : MonoBehaviour
         ChangeLine();
 
         //Character jumps based on input.
-        if (jumpAction.triggered)
+        if (jumpAction.triggered && isOnFloor)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isOnFloor = false;
 
         }
 
         //timer decreases 1 per second.
         timer -= Time.deltaTime;
-        //Debug.Log("Tiempo: " + Mathf.CeilToInt(timer));
+        //Debug.Log("Tiempo: " + Mathf.CeilToInt(timer))
+    }
 
-
+    private void OnCollisionEnter(Collision collision)
+    {
+        isOnFloor = true;
     }
 
     private void ChangeLine()
@@ -91,20 +96,20 @@ public class PlayerController : MonoBehaviour
         if (nameObject.Contains("Chair") || nameObject.Contains("Chair"))
         {
             timer -= discountCoffeeMachine; ;
-            other.enabled = false; // Desactiva el collider para no restar dos veces si se queda dentro
-            Debug.Log($"¡Chocaste con Silla! -{2}s. Tiempo restante: {timer}");
+            other.enabled = false; // we don't want to substract more than one time. 
+            //Debug.Log($"¡Chocaste con Silla! -{2}s. Tiempo restante: {timer}");
         }
         else if (nameObject.Contains("Lover"))
         {
             timer -= discountLover;
             other.enabled = false;
-            Debug.Log($"¡Chocaste con Lover! -{4}s. Tiempo restante: {timer}");
+            //Debug.Log($"¡Chocaste con Lover! -{4}s. Tiempo restante: {timer}");
         }
         else if (nameObject.Contains("Coffee_Machine"))
         {
             timer -= discountCoffeeMachine;
             other.enabled = false;
-            Debug.Log($"¡Chocaste con CoffeMachine! -{3}s. Tiempo restante: {timer}s");
+            //Debug.Log($"¡Chocaste con CoffeMachine! -{3}s. Tiempo restante: {timer}s");
         }
 
     }
