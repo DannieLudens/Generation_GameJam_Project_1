@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     public float gravityModifier = 10;
     public float jumpForce = 40;
     public bool isOnFloor = true;
-    private float timer = 60;
+    public float timer = 60;
     private float discountChair = 2f;
     private float discountLover = 4f;
     private float discountCoffeeMachine = 3f;
@@ -42,14 +42,6 @@ public class PlayerController : MonoBehaviour
         //jump force. 
         Physics.gravity *= gravityModifier;
 
-        //check if a day has passed.
-        if (distance >= bossDistance)
-        {
-     
-            ChangeCicle();
-
-        };
-
     }
 
     private void ChangeCicle()
@@ -61,7 +53,7 @@ public class PlayerController : MonoBehaviour
         cicle++;
 
         //adds 50 to Boss goal, based on Drive board as well.
-        bossDistance += 50;
+        bossDistance += 50 + distance;
 
         //adds 0.5 to speed, based on Drive board.
         speed += 0.5f;
@@ -102,6 +94,14 @@ public class PlayerController : MonoBehaviour
         //Character moves based on input
         ChangeLine();
 
+        //check if a day has passed.
+        if (distance >= bossDistance)
+        {
+            timer = 60;
+            ChangeCicle();
+
+        };
+
         //Character jumps based on input and if he's touching the floor. 
         if (jumpAction.triggered && isOnFloor)
         {
@@ -114,7 +114,7 @@ public class PlayerController : MonoBehaviour
         //Debug.Log("Tiempo: " + Mathf.CeilToInt(timer))
 
         //calculates distance:
-        distance =+ speed * Time.deltaTime;
+        distance += speed * Time.deltaTime;
 
 
         //GameOver
@@ -122,11 +122,19 @@ public class PlayerController : MonoBehaviour
         {
             memos++;
             distance = bossDistance - distance;
-            if (memos == 3)
-            timer = 0f;
+            timer = 60;
+            if (memos == 3) { 
+                timer = 0f;
+            }
             gameOver = true;
             Debug.Log("¡Game Over! + " + distance);
 
+        }
+
+        //timer is never over 90 sec.
+        if (timer >= 90f) 
+        {
+            timer = 90;
         }
     }
 
@@ -201,8 +209,6 @@ public class PlayerController : MonoBehaviour
         }
         
     }
-
-    
 
 }
 
