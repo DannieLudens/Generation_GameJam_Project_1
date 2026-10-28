@@ -1040,6 +1040,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6765332531308986441}
+  - component: {fileID: 7359846144495630255}
   m_Layer: 0
   m_Name: Chunk_Prefab_Boss
   m_TagString: Untagged
@@ -1067,6 +1068,19 @@ Transform:
   - {fileID: 4164798759368076825}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7359846144495630255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7810187590265528323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af7808b5c5ca94d4cbc7b3a23352d7c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::boosDoorController
+  zLimit: -3
 --- !u!1 &8920818844821135701
 GameObject:
   m_ObjectHideFlags: 0

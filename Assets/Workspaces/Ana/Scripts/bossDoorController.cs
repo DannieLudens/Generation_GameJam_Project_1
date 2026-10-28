@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class boosDoorController : MonoBehaviour
 {
-    public float zLimit = -3; //Object should pass zLimit to get destroyed. 
+    public float zLimit = -20; //Object should pass zLimit to get destroyed. 
     bool playerIsNear = false;
     public static float doorPosZ;
     private bool hasSpawnedNext = false;
@@ -11,7 +11,7 @@ public class boosDoorController : MonoBehaviour
     void Start()
     {
         //Places door at the end.
-        transform.position = new Vector3(13.9f, 0.004539691f, 55f);
+        transform.position = new Vector3(1.41f, 7.1f, 55f);
         doorPosZ = transform.position.z;
     }
 
@@ -41,7 +41,7 @@ public class boosDoorController : MonoBehaviour
         // Move constantly in z axis based on speed from PlayerController script
         transform.Translate(Vector3.back * PlayerController.speed * Time.deltaTime, Space.World);
 
-        if (!hasSpawnedNext && transform.position.z <= zLimit+5)
+        if (!hasSpawnedNext && transform.position.z <= zLimit+3)
         {
             bossDoorSpawner.instance.SpawnDoor();
             hasSpawnedNext = true; // El seguro para no repetir la llamada
