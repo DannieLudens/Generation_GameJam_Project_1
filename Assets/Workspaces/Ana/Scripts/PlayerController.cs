@@ -62,7 +62,8 @@ public class PlayerController : MonoBehaviour
         cicle++;
 
         //adds 50 to Boss goal, based on Drive board as well.
-        bossDistance += 50 + distance;
+        bossDistance += 700;
+        
 
         //adds 0.5 to speed, based on Drive board.
         speed += 0.5f;

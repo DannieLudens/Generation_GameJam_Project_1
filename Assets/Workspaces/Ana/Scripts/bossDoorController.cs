@@ -11,7 +11,7 @@ public class boosDoorController : MonoBehaviour
     void Start()
     {
         //Places door at the end.
-        transform.position = new Vector3(1.41f, 7.1f, 55f);
+        transform.position = new Vector3(1.88f, 4.57f, 96.1f);
         doorPosZ = transform.position.z;
     }
 
@@ -20,7 +20,7 @@ public class boosDoorController : MonoBehaviour
     {
         if (!playerIsNear)
         {
-            float travelDistance = 55f - PlayerController.playerZpos;
+            float travelDistance = 96.1f - PlayerController.playerZpos;
             if (PlayerController.distance >= (PlayerController.bossDistance - travelDistance))
             {
                 playerIsNear = true;

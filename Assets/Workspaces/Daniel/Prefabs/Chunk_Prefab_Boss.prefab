@@ -1080,7 +1080,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af7808b5c5ca94d4cbc7b3a23352d7c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::boosDoorController
-  zLimit: -3
+  zLimit: -20
 --- !u!1 &8920818844821135701
 GameObject:
   m_ObjectHideFlags: 0
