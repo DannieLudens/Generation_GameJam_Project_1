@@ -209,7 +209,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &62961460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3426,6 +3426,9 @@ MonoBehaviour:
   gravityModifier: 10
   jumpForce: 40
   isOnFloor: 1
+  distance: 0
+  memos: 0
+  cicle: 0
 --- !u!1 &1790070026 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8169778842354812395, guid: 69fae7714546f6942abab8f0e225babb, type: 3}
@@ -4090,7 +4093,7 @@ MonoBehaviour:
   - {fileID: 2188034027570774380, guid: 43b33e9ba62489340bfb6187b8b7099b, type: 3}
   - {fileID: 2685525236988907858, guid: 26d46dad2fd146d4d9109dc0fb958ed4, type: 3}
   - {fileID: 5964700775181252763, guid: a749243363b48cd499c73ed926cc4fee, type: 3}
-  rotationSpeed: 90
+  clockPrefab: {fileID: 380169656922018486, guid: 2fe0bf6137f934944be1eb457dc94b00, type: 3}
 --- !u!4 &2079002265
 Transform:
   m_ObjectHideFlags: 0

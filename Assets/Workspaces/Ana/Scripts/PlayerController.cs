@@ -20,17 +20,79 @@ public class PlayerController : MonoBehaviour
     private float discountCoffeeMachine = 3f;
     public static bool gameOver = false;
     public float distance;
-    public float speed = 15f; //Based on MoveBackward script. 
+    public static float speed = 12f; //initial speed based on Drive board.
+    float bossDistance = 600; //Inicial goal based on Drive board. 
+    public int memos = 0;
+    public static float obstacleDistance = 30f; // Inicial obstacle distance based on Drive board.
+    public static float clockProbability = 40f; // initial probability based on Drive board.
+    public int cicle = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //Places player on the center of center line. 
         transform.position = new Vector3((xMin + xMax) / 2, -0.02791834f, 0.44f);
+
+        //check inputs
         leftAction.Enable();
         rightAction.Enable();
         rb = GetComponent<Rigidbody>();
         jumpAction.Enable();
+
+        //jump force. 
         Physics.gravity *= gravityModifier;
+
+        //check if a day has passed.
+        if (distance <= bossDistance)
+        {
+     
+            ChangeCicle();
+
+        };
+
+    }
+
+    private void ChangeCicle()
+    {
+
+        //Animacion de hoja retirada
+
+        //new cicle count
+        cicle++;
+
+        //adds 50 to Boss goal, based on Drive board as well.
+        bossDistance += 50;
+
+        //adds 0.5 to speed, based on Drive board.
+        speed += 0.5f;
+
+        //the higer cicle player is in, the less distance between obstacles is. 
+        if (cicle <= 3)
+        {
+            obstacleDistance -= 3;
+        }
+
+        else if (cicle == 4)
+        {
+            obstacleDistance -= 19;
+        }
+
+        else 
+        {
+            obstacleDistance -= 2f; // if cicle is more than +, distance decreses 2
+            if (obstacleDistance < 12f)
+            {
+                obstacleDistance = 12f; // this is the limit for obstacleDistance
+            }
+        }
+
+        //clock probability decreses 5 per cicle.
+        clockProbability -= 5f;
+
+        if (clockProbability < 20f)
+        {
+            clockProbability = 20f;
+        }
 
     }
 
@@ -58,13 +120,14 @@ public class PlayerController : MonoBehaviour
         //GameOver
         if (timer <= 0f)
         {
+            memos++;
+            distance = bossDistance - distance;
+            if (memos == 3)
             timer = 0f;
             gameOver = true;
             Debug.Log("¡Game Over! + " + distance);
 
         }
-
-        
     }
 
     private void OnCollisionEnter(Collision collision)

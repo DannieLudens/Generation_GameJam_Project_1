@@ -1,50 +1,67 @@
-using UnityEngine;
 using System.Collections;
-public class ObstacleSpawn : MonoBehaviour
-{
-    public GameObject[] ObstaclePrefabs;
-    //public int obstacleIndex;
-    private float startDelay = 3;
-    private float spawnInterval = 1.5f;
-    public float rotationSpeed = 90;
-    
+using UnityEngine;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+public class ObstacleSpawner : MonoBehaviour
+{
+    public GameObject[] ObstaclePrefabs;//assigns obstacles prefabs. 
+    public GameObject clockPrefab; // assigns clock to clockPrefab
+
+    //psitions: 
+    private float xMin = -2f;
+    private float xMax = 6f;
+    private float spawnZ = 46f;
+    private float spawnObstacleY = 0.35f;
+    private float spawnClockY = 1.78f;
+
     void Start()
     {
-        if (PlayerController.gameOver) return;
-        //Spawn Obstacle based on startDelay and spawnInterval
-        InvokeRepeating("SpawnRandomObstacle", startDelay, spawnInterval);
-
+        StartCoroutine(SpawnObstacles());
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator SpawnObstacles()
     {
-        
+        // verifies if game is over, if it is no more prefabs would be created. 
+        while (!PlayerController.gameOver)
+        {
+            // based on probability from PlayerController script, it will spawn a clock or obstacle.
+            float probability = Random.Range(0f, 100f);
+
+            if (probability < PlayerController.clockProbability)
+            {
+                SpawnItem(clockPrefab, spawnClockY);
+            }
+            else
+            {
+                SpawnRandomObstacle();
+            }
+
+            // get the distance based on time and physic formula time = distance/speed
+            float interval = PlayerController.obstacleDistance / PlayerController.speed;
+
+            // waits that interval between spwan and spawn
+            yield return new WaitForSeconds(interval);
+
+        }
     }
 
-    void SpawnRandomObstacle()
+    private void SpawnRandomObstacle()
     {
-        //verify x positions
-        float leftLine = -2;
-        float rightLine = 6;
-        float centerLine = (leftLine + rightLine) / 2;
-
-        //Creates index to spawn obstacles based on ObstaclePrefabs
-        int obstacleIndex = Random.Range(0, ObstaclePrefabs.Length);
-
-        //Stores the xpositions in Line array
-        float[] line = new float[] { leftLine, (leftLine+rightLine)/2, 6f };
-
-        //So we can spawn the obstacle on a random Line
-        float xLine = line[Random.Range(0, line.Length)];
-
-        //store the point where the obstacle will  spawn
-        Vector3 spawnPos = new Vector3(xLine, -0.02791834f, 46);
-
-        //instantiate the obstacle =D
-        Instantiate(ObstaclePrefabs[obstacleIndex], spawnPos, ObstaclePrefabs[obstacleIndex].transform.rotation);
+        int index = Random.Range(0, ObstaclePrefabs.Length);
+        SpawnItem(ObstaclePrefabs[index], spawnObstacleY);
     }
-    
+
+    private void SpawnItem(GameObject prefab, float posY)
+    {
+        {
+
+        // chosses a Line.
+        float[] Line = new float[] { xMin, (xMin + xMax) / 2f, xMax };
+        float xLine = Line[Random.Range(0, Line.Length)];
+
+        Vector3 spawnPos = new Vector3(xLine, posY, spawnZ);
+
+        Instantiate(prefab, spawnPos, prefab.transform.rotation);
+
+        }
+    }
 }

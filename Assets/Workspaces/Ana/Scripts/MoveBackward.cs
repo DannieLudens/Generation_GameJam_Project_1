@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class MoveBackward : MonoBehaviour
 {
-    public float speed = 15f;
     public float zLimit = -3; //Object should pass zLimit to get destroyed. 
     public float rotationSpeed = 90;
 
@@ -15,11 +14,11 @@ public class MoveBackward : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //verifies if game is over. If it is, then no more prefabs would be created, 
+        //verifies if game is over. If it is, then world stops. 
         if (PlayerController.gameOver) return;
 
-        // Move constantly in z axis.
-        transform.Translate(Vector3.back * speed * Time.deltaTime, Space.World);
+        // Move constantly in z axis based on speed from PlayerController script
+        transform.Translate(Vector3.back * PlayerController.speed * Time.deltaTime, Space.World);
 
         //adds a rotation in z axis, so it looks prettier. 
         transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.Self);
