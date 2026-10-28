@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
         Physics.gravity *= gravityModifier;
 
         //check if a day has passed.
-        if (distance <= bossDistance)
+        if (distance >= bossDistance)
         {
      
             ChangeCicle();
@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour
 
         else if (cicle == 4)
         {
-            obstacleDistance -= 19;
+            obstacleDistance = 19;
         }
 
         else 
