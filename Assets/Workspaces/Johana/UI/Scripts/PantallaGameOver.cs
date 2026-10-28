@@ -120,7 +120,6 @@ public class PantallaGameOver : MonoBehaviour
 
         PlayerPrefs.SetString("nombre" + puesto, nombre);
         PlayerPrefs.SetInt("metros" + puesto, metros);
-        PlayerPrefs.SetInt("filaNueva", puesto);
 
         Time.timeScale = 1;
         SceneManager.LoadScene("Leaderboard");

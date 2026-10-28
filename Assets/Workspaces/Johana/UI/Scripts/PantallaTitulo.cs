@@ -30,8 +30,6 @@ public class PantallaTitulo : MonoBehaviour
 
     public void VerLeaderboard()
     {
-        // desde el titulo no se resalta ninguna fila
-        PlayerPrefs.SetInt("filaNueva", -1);
         SceneManager.LoadScene("Leaderboard");
     }
 
