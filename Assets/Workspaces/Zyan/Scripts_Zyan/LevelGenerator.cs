@@ -3,7 +3,7 @@ using System.Collections.Generic;
 public class LevelGenerator : MonoBehaviour
 {
     
-    [SerializeField] GameObject chunkPrefab;
+    [SerializeField] GameObject[] chunkPrefabs;
     [SerializeField] int startingChunksAmount = 12;
     [SerializeField] Transform chunkParent;
     [SerializeField] float chunkLenght = 10f;
@@ -37,7 +37,8 @@ public class LevelGenerator : MonoBehaviour
             
             Vector3 chunkSpawnPos = new Vector3(transform.position.x, transform.position.y , spawnPositionZ);
             // Quaternion.identity rotacion neutra/predeterminada, equivalente a no aplicar ninguna rotacion.
-            GameObject newChunk = Instantiate(chunkPrefab,chunkSpawnPos,Quaternion.identity, chunkParent);
+            GameObject chunkToSpawn = chunkPrefabs[Random.Range(0,chunkPrefabs.Length)];
+            GameObject newChunk = Instantiate(chunkToSpawn,chunkSpawnPos,Quaternion.identity, chunkParent);
             chunks.Add(newChunk);
         
     }
