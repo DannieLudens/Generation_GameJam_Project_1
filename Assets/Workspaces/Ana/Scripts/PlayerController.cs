@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityPipeline.Microsoft.CodeAnalysis;
 
 public class PlayerController : MonoBehaviour
 {
@@ -18,18 +17,28 @@ public class PlayerController : MonoBehaviour
     private float discountChair = 2f;
     private float discountLover = 4f;
     private float discountCoffeeMachine = 3f;
-    public static bool gameOver = false;
-    public float distance;
-    public static float speed = 12f; //initial speed based on Drive board.
-    float bossDistance = 600; //Inicial goal based on Drive board. 
-    public int memos = 0;
-    public static float obstacleDistance = 30f; // Inicial obstacle distance based on Drive board.
-    public static float clockProbability = 40f; // initial probability based on Drive board.
+    public static bool gameOver;
+    public static float distance;
+    public static float speed; //initial speed based on Drive board.
+    public static float bossDistance; //Inicial goal based on Drive board. 
+    public int memos;
+    public static float obstacleDistance;
+    public static float clockProbability;
     public int cicle = 0;
+    public static float playerZpos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        gameOver = false;
+        speed = 12f; //initial speed based on Drive board.
+        obstacleDistance = 30f; // Inicial obstacle distance based on Drive board.
+        clockProbability = 40f; // initial probability based on Drive board.
+        distance = 0;//Inicial goal based on Drive board. 
+        bossDistance = 600;
+        playerZpos = 0.44f;
+
+
         //Places player on the center of center line. 
         transform.position = new Vector3((xMin + xMax) / 2, -0.02791834f, 0.44f);
 
@@ -91,6 +100,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         //Character moves based on input
         ChangeLine();
 
@@ -125,10 +135,9 @@ public class PlayerController : MonoBehaviour
             timer = 60;
             if (memos == 3) { 
                 timer = 0f;
-            }
             gameOver = true;
             Debug.Log("¡Game Over! + " + distance);
-
+            }
         }
 
         //timer is never over 90 sec.
@@ -201,7 +210,7 @@ public class PlayerController : MonoBehaviour
             other.enabled = false;
             Debug.Log($"¡Chocaste con Lover! -{4}s. Tiempo restante: {timer}");
         }
-        else if (nameObject.Contains("Coffee_machine"))
+        else if (nameObject.Contains("coffee_machine"))
         {
             timer -= discountCoffeeMachine;
             other.enabled = false;

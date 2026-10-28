@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1024272249676187938}
   - component: {fileID: 6769934655840940096}
   m_Layer: 0
-  m_Name: Coffee_machine
+  m_Name: coffee_machine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -149,7 +149,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8190b8ee2825674b8b0aff7c6598f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoveBackward
-  speed: 15
   zLimit: -3
   rotationSpeed: 90
 --- !u!54 &6769934655840940096
