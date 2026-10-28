@@ -13,9 +13,12 @@ public class AudioManager : MonoBehaviour
 
     [Header("Mixer")]
     public AudioMixer mixer;
+    [Tooltip("Subgrupo donde suena el loop de música (ej. Music/BGM).")]
     public AudioMixerGroup musicGroup;
-    public AudioMixerGroup sFXGroup;
-    public AudioMixerGroup uIGroup;
+    [Tooltip("Subgrupo donde suena el drone (ej. Music/Drone). Si lo dejas vacío usa musicGroup.")]
+    public AudioMixerGroup droneGroup;
+    public AudioMixerGroup sfxGroup;
+    public AudioMixerGroup uiGroup;
 
     [Header("Música")]
     public AudioClip musicLoop;
@@ -42,6 +45,9 @@ public class AudioManager : MonoBehaviour
     int nextSfx;
     float tensionTarget, tension;
     bool paused;
+    // Nivel de mezcla que dejaste a mano en el Audio Mixer (se lee al iniciar).
+    // El slider del jugador solo baja desde ese nivel, nunca lo sube por encima.
+    float baseMusicDb, baseSfxDb, baseUiDb;
 
     void Awake()
     {
@@ -50,17 +56,22 @@ public class AudioManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         musicSource = NewSource("Music", musicGroup, true);
-        droneSource = NewSource("Drone", musicGroup, true);
-        uiSource = NewSource("UI", uIGroup, false);
+        droneSource = NewSource("Drone", droneGroup != null ? droneGroup : musicGroup, true);
+        uiSource = NewSource("UI", uiGroup, false);
         sfxSources = new AudioSource[sfxVoices];
-        for (int i = 0; i < sfxVoices; i++) sfxSources[i] = NewSource("SFX_" + i, sFXGroup, false);
+        for (int i = 0; i < sfxVoices; i++) sfxSources[i] = NewSource("SFX_" + i, sfxGroup, false);
     }
 
     void Start()
     {
-        // Aplica los volúmenes guardados (el mixer solo acepta valores después de Awake)
-        SetMusicVolume(PlayerPrefs.GetFloat(MusicKey, 0.8f));
-        SetSFXVolume(PlayerPrefs.GetFloat(SfxKey, 0.8f));
+        // Guarda la mezcla manual del Audio Mixer (por ejemplo Music en -15 dB)
+        mixer.GetFloat("MusicVolume", out baseMusicDb);
+        mixer.GetFloat("SFXVolume", out baseSfxDb);
+        mixer.GetFloat("UIVolume", out baseUiDb);
+
+        // Aplica los volúmenes guardados del jugador encima de esa mezcla
+        SetMusicVolume(PlayerPrefs.GetFloat(MusicKey, 1f));
+        SetSFXVolume(PlayerPrefs.GetFloat(SfxKey, 1f));
         PlayMusic();
     }
 
@@ -136,9 +147,22 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySFX(AudioClip clip, float volume, float pitchVariation)
     {
+        PlaySFX(clip, volume, pitchVariation, null);
+    }
+
+    /// Igual que PlaySFX pero por un subgrupo del mixer (ej. SFX/Obstacles) para mezclarlo aparte.
+    /// Ejemplo: AudioManager.Instance.PlaySFX(clip, 1f, sfxObstaclesGroup);
+    public void PlaySFX(AudioClip clip, float volume, AudioMixerGroup group)
+    {
+        PlaySFX(clip, volume, defaultPitchVariation, group);
+    }
+
+    public void PlaySFX(AudioClip clip, float volume, float pitchVariation, AudioMixerGroup group)
+    {
         if (clip == null) return;
         var s = sfxSources[nextSfx];
         nextSfx = (nextSfx + 1) % sfxSources.Length;
+        s.outputAudioMixerGroup = group != null ? group : sfxGroup;
         s.pitch = 1f + Random.Range(-pitchVariation, pitchVariation);
         s.PlayOneShot(clip, volume);
     }
@@ -153,21 +177,24 @@ public class AudioManager : MonoBehaviour
 
     public void SetMusicVolume(float value01)
     {
-        mixer.SetFloat("MusicVolume", ToDecibels(value01));
+        mixer.SetFloat("MusicVolume", Mix(baseMusicDb, value01));
         PlayerPrefs.SetFloat(MusicKey, value01);
     }
 
     public void SetSFXVolume(float value01)
     {
         // Los efectos y la UI comparten el mismo slider
-        mixer.SetFloat("SFXVolume", ToDecibels(value01));
-        mixer.SetFloat("UIVolume", ToDecibels(value01));
+        mixer.SetFloat("SFXVolume", Mix(baseSfxDb, value01));
+        mixer.SetFloat("UIVolume", Mix(baseUiDb, value01));
         PlayerPrefs.SetFloat(SfxKey, value01);
     }
 
-    public float GetMusicVolume() => PlayerPrefs.GetFloat(MusicKey, 0.8f);
-    public float GetSFXVolume() => PlayerPrefs.GetFloat(SfxKey, 0.8f);
+    public float GetMusicVolume() => PlayerPrefs.GetFloat(MusicKey, 1f);
+    public float GetSFXVolume() => PlayerPrefs.GetFloat(SfxKey, 1f);
 
     // 0..1 lineal → -80..0 dB (el slider se siente natural)
     static float ToDecibels(float v) => v <= 0.0001f ? -80f : Mathf.Log10(v) * 20f;
+
+    // Mezcla manual + slider del jugador (slider en 1 = tu mezcla tal cual)
+    static float Mix(float baseDb, float v) => v <= 0.0001f ? -80f : Mathf.Max(-80f, baseDb + ToDecibels(v));
 }

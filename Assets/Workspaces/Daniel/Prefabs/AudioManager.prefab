@@ -46,12 +46,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   mixer: {fileID: 24100000, guid: a3522ad0a19cb4b42a4b06af61b1af26, type: 2}
   musicGroup: {fileID: -2116719397522482830, guid: a3522ad0a19cb4b42a4b06af61b1af26, type: 2}
-  sFXGroup: {fileID: 5211667397204425087, guid: a3522ad0a19cb4b42a4b06af61b1af26, type: 2}
-  uIGroup: {fileID: -6434507986531465539, guid: a3522ad0a19cb4b42a4b06af61b1af26, type: 2}
+  droneGroup: {fileID: -371525914834931064, guid: a3522ad0a19cb4b42a4b06af61b1af26, type: 2}
+  sfxGroup: {fileID: 5211667397204425087, guid: a3522ad0a19cb4b42a4b06af61b1af26, type: 2}
+  uiGroup: {fileID: -6434507986531465539, guid: a3522ad0a19cb4b42a4b06af61b1af26, type: 2}
   musicLoop: {fileID: 8300000, guid: 3080acc0175bdc240829c8cda02be629, type: 3}
-  droneLoop: {fileID: 8300000, guid: ea8f2f2c552b3394e9020f53d80962ba, type: 3}
+  droneLoop: {fileID: 8300000, guid: 37786e6ad53ff7b498eb3b62e753f099, type: 3}
   musicVolume: 0.8
   droneMaxVolume: 0.7
-  droneFadeSpeed: 1.5
+  musicDuck: 0.7
+  tensionFadeSpeed: 1
   defaultPitchVariation: 0.05
   sfxVoices: 8
