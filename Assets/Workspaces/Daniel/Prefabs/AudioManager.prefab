@@ -49,10 +49,18 @@ MonoBehaviour:
   droneGroup: {fileID: -371525914834931064, guid: a3522ad0a19cb4b42a4b06af61b1af26, type: 2}
   sfxGroup: {fileID: 5211667397204425087, guid: a3522ad0a19cb4b42a4b06af61b1af26, type: 2}
   uiGroup: {fileID: -6434507986531465539, guid: a3522ad0a19cb4b42a4b06af61b1af26, type: 2}
+  menuMusic: {fileID: 8300000, guid: a9b75e886cdec6949849abb70e31f50f, type: 3}
+  leaderboardMusic: {fileID: 8300000, guid: 5427f3bc6f18ebf4cba8a15417113327, type: 3}
+  gameplayPlaylist:
+  - {fileID: 8300000, guid: d99e96d7b43e60546936936ccadd665b, type: 3}
+  - {fileID: 8300000, guid: cee21a354977b7c4abde4373ea5efc03, type: 3}
+  - {fileID: 8300000, guid: a070ee5ab148a1149bc633ff7f5b46cf, type: 3}
   musicLoop: {fileID: 8300000, guid: 3080acc0175bdc240829c8cda02be629, type: 3}
+  gameOverStinger: {fileID: 8300000, guid: 0d6472ee369a0874aab61434ffd44afb, type: 3}
+  startMode: 2
   droneLoop: {fileID: 8300000, guid: 37786e6ad53ff7b498eb3b62e753f099, type: 3}
-  musicVolume: 0.8
-  droneMaxVolume: 0.7
+  musicVolume: 0.28
+  droneMaxVolume: 1
   musicDuck: 0.7
   tensionFadeSpeed: 1
   defaultPitchVariation: 0.05

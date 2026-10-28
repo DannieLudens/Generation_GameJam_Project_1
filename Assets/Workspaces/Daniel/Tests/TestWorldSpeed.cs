@@ -55,16 +55,23 @@ public class TestWorldSpeed : MonoBehaviour
         float step = Speed * Time.deltaTime;
         totalMeters += step;
         dayMeters += step;
-        if (autoDayByDistance && dayMeters >= DayDistance) SetDay(day + 1);
+        if (autoDayByDistance && dayMeters >= DayDistance) NextDay();
 
-        if (Input.GetKeyDown(KeyCode.N)) SetDay(day + 1);
+        if (Input.GetKeyDown(KeyCode.N)) NextDay();
         if (Input.GetKeyDown(KeyCode.M)) { totalMeters = 0f; SetDay(1); }
 
         if (autoDaySeconds > 0f)
         {
             timer += Time.deltaTime;
-            if (timer >= autoDaySeconds) { timer = 0f; SetDay(day + 1); }
+            if (timer >= autoDaySeconds) { timer = 0f; NextDay(); }
         }
+    }
+
+    /// Cruzar la oficina del jefe: veredicto (panel) + hoja del calendario + siguiente día
+    public void NextDay()
+    {
+        if (TestAudioPanel.Instance != null) TestAudioPanel.Instance.CrossBoss();
+        SetDay(day + 1);
     }
 
     void SetDay(int d)
