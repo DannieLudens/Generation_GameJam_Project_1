@@ -19,6 +19,6 @@ public class bossDoorSpawner : MonoBehaviour
     public void SpawnDoor()
     {
         if (PlayerController.gameOver) return;
-        Instantiate(bossOffice, new Vector3(13.9f, 0.004539691f, 55f), bossOffice.transform.rotation);
+        Instantiate(bossOffice, new Vector3(1.88f, 4.57f, 96.1f), bossOffice.transform.rotation);
     }
 }
