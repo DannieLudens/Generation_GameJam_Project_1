@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// AudioManager de Never-Ending Monday (T26).
 /// - Música por modo: menú (loop), juego (playlist aleatoria sin cortes) y stinger de Game Over.
@@ -36,8 +39,20 @@ public class AudioManager : MonoBehaviour
     public AudioClip musicLoop;
     [Tooltip("Pieza que cierra la música al ser despedido (3er memorando).")]
     public AudioClip gameOverStinger;
-    [Tooltip("Qué música arranca al dar Play en esta escena.")]
+    [Tooltip("Qué música arranca al dar Play en esta escena (solo si Auto Music By Scene está apagado).")]
     public MusicMode startMode = MusicMode.Gameplay;
+
+    [Header("Música automática por escena")]
+    [Tooltip("Elige la música según el nombre de la escena que se carga. Cualquier otra escena = juego.")]
+    public bool autoMusicByScene = true;
+    public string menuSceneName = "Titulo";
+    public string leaderboardSceneName = "Leaderboard";
+
+    [Header("Sonidos de UI automáticos")]
+    [Tooltip("Suena al moverse entre botones (selección con teclado o mouse).")]
+    public AudioClip uiHover;
+    [Tooltip("Suena al presionar cualquier botón (Button) de la escena.")]
+    public AudioClip uiClick;
 
     [Header("Tensión")]
     public AudioClip droneLoop;
@@ -55,8 +70,13 @@ public class AudioManager : MonoBehaviour
     [Tooltip("Cuántos SFX pueden sonar al mismo tiempo.")]
     public int sfxVoices = 8;
 
-    const string MusicKey = "vol_music";
-    const string SfxKey = "vol_sfx";
+    // Mismas claves que usa PantallaConfiguracion (Johana): sus sliders controlan este audio
+    const string MusicKey = "volumenMusica";
+    const string SfxKey = "volumenEfectos";
+    const float DefaultMusic = 0.7f, DefaultSfx = 0.8f;
+    float appliedMusic = -1f, appliedSfx = -1f, nextPrefsCheck;
+    GameObject lastSelected;
+    float ignoreHoverUntil;
 
     AudioSource[] musicSources;   // 2 para encadenar pistas sin cortes
     AudioSource droneSource, uiSource;
@@ -93,14 +113,53 @@ public class AudioManager : MonoBehaviour
         mixer.GetFloat("UIVolume", out baseUiDb);
 
         // Aplica los volúmenes guardados del jugador encima de esa mezcla
-        SetMusicVolume(PlayerPrefs.GetFloat(MusicKey, 1f));
-        SetSFXVolume(PlayerPrefs.GetFloat(SfxKey, 1f));
-        switch (startMode)
+        SyncVolumesFromPrefs();
+
+        if (autoMusicByScene) ApplySceneMusic(SceneManager.GetActiveScene().name);
+        else switch (startMode)
         {
             case MusicMode.Menu: PlayMenuMusic(); break;
             case MusicMode.Leaderboard: PlayLeaderboardMusic(); break;
             case MusicMode.Gameplay: PlayGameplayMusic(); break;
         }
+        HookButtons();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDestroy()
+    {
+        if (Instance == this) SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (autoMusicByScene) ApplySceneMusic(scene.name);
+        HookButtons();
+    }
+
+    void ApplySceneMusic(string sceneName)
+    {
+        SetPausedMuffle(false);
+        if (sceneName == menuSceneName) PlayMenuMusic();
+        else if (sceneName == leaderboardSceneName) PlayLeaderboardMusic();
+        else PlayGameplayMusic(); // escena de juego (también al Reintentar)
+    }
+
+    // Agrega el clic a todos los botones de la escena (incluye paneles ocultos como pausa o Game Over)
+    void HookButtons()
+    {
+        lastSelected = null;
+        ignoreHoverUntil = Time.unscaledTime + 0.3f; // no suena el hover del botón que se selecciona solo al abrir
+        foreach (var b in FindObjectsByType<Button>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            b.onClick.AddListener(() => PlayUI(uiClick));
+    }
+
+    void SyncVolumesFromPrefs()
+    {
+        float m = PlayerPrefs.GetFloat(MusicKey, DefaultMusic);
+        float s = PlayerPrefs.GetFloat(SfxKey, DefaultSfx);
+        if (!Mathf.Approximately(m, appliedMusic)) { ApplyMusicVolume(m); appliedMusic = m; }
+        if (!Mathf.Approximately(s, appliedSfx)) { ApplySfxVolume(s); appliedSfx = s; }
     }
 
     void Update()
@@ -113,12 +172,30 @@ public class AudioManager : MonoBehaviour
         if (paused) music *= 0.4f;
         foreach (var src in musicSources) src.volume = music;
 
+        // Sliders de Johana: revisa cada 0,25 s si cambiaron (funciona también en pausa)
+        if (Time.unscaledTime >= nextPrefsCheck)
+        {
+            nextPrefsCheck = Time.unscaledTime + 0.25f;
+            SyncVolumesFromPrefs();
+        }
+
+        // Hover: suena cuando cambia el botón seleccionado
+        var es = EventSystem.current;
+        var sel = es != null ? es.currentSelectedGameObject : null;
+        if (sel != lastSelected)
+        {
+            if (sel != null && lastSelected != null && Time.unscaledTime > ignoreHoverUntil) PlayUI(uiHover);
+            lastSelected = sel;
+        }
+
         // Playlist: cuando entra la pista ya programada, se programa la siguiente en la otra fuente
         if (Mode == MusicMode.Gameplay && gameplayPlaylist != null && gameplayPlaylist.Length > 0
             && AudioSettings.dspTime >= nextSwitchDsp)
         {
-            playingSrc = 1 - playingSrc;
-            ScheduleNextTrack(1 - playingSrc, nextSwitchDsp + Length(musicSources[playingSrc].clip));
+            playingSrc = 1 - playingSrc;                                   // ya suena la que estaba programada
+            double end = nextSwitchDsp + Length(musicSources[playingSrc].clip);
+            ScheduleNextTrack(1 - playingSrc, end);                        // la siguiente, en la fuente libre
+            nextSwitchDsp = end;                                           // próximo cambio (antes faltaba esto)
         }
     }
 
@@ -152,6 +229,7 @@ public class AudioManager : MonoBehaviour
         musicSources[0].clip = clip;
         musicSources[0].loop = true;
         musicSources[0].Play();
+        Debug.Log($"[AUDIO] {mode} → {clip.name}");
     }
 
     /// Partida: playlist aleatoria encadenada sin cortes + drone en silencio listo para subir.
@@ -159,6 +237,7 @@ public class AudioManager : MonoBehaviour
     {
         StopMusic();
         Mode = MusicMode.Gameplay;
+        Debug.Log($"[AUDIO] Gameplay (playlist de {(gameplayPlaylist == null ? 0 : gameplayPlaylist.Length)} pistas)");
 
         if (gameplayPlaylist != null && gameplayPlaylist.Length > 0)
         {
@@ -225,6 +304,7 @@ public class AudioManager : MonoBehaviour
         musicSources[src].clip = gameplayPlaylist[i];
         musicSources[src].loop = false;
         musicSources[src].PlayScheduled(startDsp);
+        Debug.Log($"[AUDIO] Playlist → {gameplayPlaylist[i].name} en {musicSources[src].name}");
     }
 
     int PickTrack()
@@ -294,20 +374,29 @@ public class AudioManager : MonoBehaviour
 
     public void SetMusicVolume(float value01)
     {
-        mixer.SetFloat("MusicVolume", Mix(baseMusicDb, value01));
+        ApplyMusicVolume(value01);
+        appliedMusic = value01;
         PlayerPrefs.SetFloat(MusicKey, value01);
     }
 
     public void SetSFXVolume(float value01)
     {
-        // Los efectos y la UI comparten el mismo slider
-        mixer.SetFloat("SFXVolume", Mix(baseSfxDb, value01));
-        mixer.SetFloat("UIVolume", Mix(baseUiDb, value01));
+        ApplySfxVolume(value01);
+        appliedSfx = value01;
         PlayerPrefs.SetFloat(SfxKey, value01);
     }
 
-    public float GetMusicVolume() => PlayerPrefs.GetFloat(MusicKey, 1f);
-    public float GetSFXVolume() => PlayerPrefs.GetFloat(SfxKey, 1f);
+    void ApplyMusicVolume(float v) => mixer.SetFloat("MusicVolume", Mix(baseMusicDb, v));
+
+    void ApplySfxVolume(float v)
+    {
+        // Los efectos y la UI comparten el mismo slider
+        mixer.SetFloat("SFXVolume", Mix(baseSfxDb, v));
+        mixer.SetFloat("UIVolume", Mix(baseUiDb, v));
+    }
+
+    public float GetMusicVolume() => PlayerPrefs.GetFloat(MusicKey, DefaultMusic);
+    public float GetSFXVolume() => PlayerPrefs.GetFloat(SfxKey, DefaultSfx);
 
     // 0..1 lineal → -80..0 dB (el slider se siente natural)
     static float ToDecibels(float v) => v <= 0.0001f ? -80f : Mathf.Log10(v) * 20f;

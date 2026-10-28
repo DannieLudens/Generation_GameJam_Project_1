@@ -1418,14 +1418,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1731204311271083994, guid: 28c07c91cb5c69d4cbac102cb655229d, type: 3}
-      propertyPath: musicVolume
-      value: 0.281
-      objectReference: {fileID: 0}
-    - target: {fileID: 1731204311271083994, guid: 28c07c91cb5c69d4cbac102cb655229d, type: 3}
-      propertyPath: droneMaxVolume
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7689931768070608353, guid: 28c07c91cb5c69d4cbac102cb655229d, type: 3}
       propertyPath: m_Name
       value: AudioManager
