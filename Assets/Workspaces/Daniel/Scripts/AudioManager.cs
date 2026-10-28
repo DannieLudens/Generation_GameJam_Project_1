@@ -192,8 +192,10 @@ public class AudioManager : MonoBehaviour
         if (Mode == MusicMode.Gameplay && gameplayPlaylist != null && gameplayPlaylist.Length > 0
             && AudioSettings.dspTime >= nextSwitchDsp)
         {
-            playingSrc = 1 - playingSrc;
-            ScheduleNextTrack(1 - playingSrc, nextSwitchDsp + Length(musicSources[playingSrc].clip));
+            playingSrc = 1 - playingSrc;                                   // ya suena la que estaba programada
+            double end = nextSwitchDsp + Length(musicSources[playingSrc].clip);
+            ScheduleNextTrack(1 - playingSrc, end);                        // la siguiente, en la fuente libre
+            nextSwitchDsp = end;                                           // próximo cambio (antes faltaba esto)
         }
     }
 
