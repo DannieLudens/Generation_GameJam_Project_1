@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class HUDJuego : MonoBehaviour
 {
-    [Header("Tiempo")]
     public Image panelTiempo;
     public Text textoTiempo;
     public Text textoTarde;
@@ -12,29 +11,26 @@ public class HUDJuego : MonoBehaviour
     public Sprite spritePanelTarde;
     public Color colorTiempoNormal;
     public Color colorTiempoCritico;
+    public GameObject vinetaRoja;
 
-    [Header("Distancia")]
-    public RectTransform barraFill;
-    public RectTransform barraBrillo;
-    public Text textoDistanciaJefe;
     public Text textoRecorrido;
 
-    [Header("Memorandos")]
     public Image[] memos;
     public Sprite spriteMemoVacio;
     public Sprite spriteMemoSellado;
 
-    [Header("Calendario")]
     public Text textoNumeroDia;
 
-    [Header("Popups")]
     public GameObject plantillaPopup;
     public Sprite iconoSuma;
     public Sprite iconoResta;
     public Color colorSuma;
     public Color colorResta;
 
-    private float anchoBarra = 440;
+    public GameObject avisoATiempo;
+    public GameObject vinetaVerde;
+    public Text textoATiempo;
+
     private int memosActuales = 0;
 
     public void MostrarTiempo(float tiempo)
@@ -48,6 +44,7 @@ public class HUDJuego : MonoBehaviour
             textoTiempo.gameObject.SetActive(false);
             textoTarde.gameObject.SetActive(true);
             panelTiempo.sprite = spritePanelTarde;
+            vinetaRoja.SetActive(true);
         }
         else
         {
@@ -58,25 +55,14 @@ public class HUDJuego : MonoBehaviour
             if (tiempo < 10)
             {
                 textoTiempo.color = colorTiempoCritico;
+                vinetaRoja.SetActive(true);
             }
             else
             {
                 textoTiempo.color = colorTiempoNormal;
+                vinetaRoja.SetActive(false);
             }
         }
-    }
-
-    // progreso va de 0 a 1
-    public void MostrarProgreso(float metrosAlJefe, float progreso)
-    {
-        textoDistanciaJefe.text = (int)metrosAlJefe + " m";
-
-        float ancho = anchoBarra * progreso;
-        barraFill.sizeDelta = new Vector2(ancho, 28);
-        barraBrillo.sizeDelta = new Vector2(ancho - 12, 6);
-
-        barraFill.gameObject.SetActive(ancho > 16);
-        barraBrillo.gameObject.SetActive(ancho > 24);
     }
 
     public void MostrarRecorrido(float metros)
@@ -132,6 +118,22 @@ public class HUDJuego : MonoBehaviour
         }
 
         StartCoroutine(SubirPopup(popup));
+    }
+
+    // cuando llega a tiempo donde el jefe
+    public void MostrarATiempo(int diaNuevo)
+    {
+        textoATiempo.text = "+1:00  ·  Día " + diaNuevo;
+        StartCoroutine(ATiempo());
+    }
+
+    IEnumerator ATiempo()
+    {
+        avisoATiempo.SetActive(true);
+        vinetaVerde.SetActive(true);
+        yield return new WaitForSeconds(2);
+        avisoATiempo.SetActive(false);
+        vinetaVerde.SetActive(false);
     }
 
     IEnumerator AnimarSello(Transform memo)

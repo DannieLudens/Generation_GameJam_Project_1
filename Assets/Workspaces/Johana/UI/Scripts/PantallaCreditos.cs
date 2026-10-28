@@ -3,19 +3,13 @@ using UnityEngine.UI;
 
 public class PantallaCreditos : MonoBehaviour
 {
-    public bool ocultarAlIniciar = true;
     public Button botonVolver;
+    public Button botonCreditos;
 
-    private bool mostrar = false;
-
-    void Awake()
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
     {
         botonVolver.onClick.AddListener(Cerrar);
-
-        if (ocultarAlIniciar && !mostrar)
-        {
-            gameObject.SetActive(false);
-        }
     }
 
     void OnEnable()
@@ -23,14 +17,9 @@ public class PantallaCreditos : MonoBehaviour
         botonVolver.Select();
     }
 
-    public void Mostrar()
-    {
-        mostrar = true;
-        gameObject.SetActive(true);
-    }
-
     public void Cerrar()
     {
         gameObject.SetActive(false);
+        botonCreditos.Select();
     }
 }

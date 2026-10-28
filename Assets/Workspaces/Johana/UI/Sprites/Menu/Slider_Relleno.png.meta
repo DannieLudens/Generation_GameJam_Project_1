@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 6490d8066eb8b3b488083546447a8a9c
+guid: 5528c1c670e96e846a7d063df1192896
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8757859471715110396
-    second: Barra_Track_0
+      213: -5965933685509763464
+    second: Slider_Relleno_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -52,7 +52,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 9, y: 9, z: 9, w: 9}
+  spriteBorder: {x: 10, y: 10, z: 10, w: 10}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Barra_Track_0
+      name: Slider_Relleno_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 28
+        width: 40
+        height: 20
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cfd8e54d9ca2a8970800000000000000
-      internalID: 8757859471715110396
+      spriteID: 87e47a10ceeb43da0800000000000000
+      internalID: -5965933685509763464
       vertices: []
       indices: 
       edges: []

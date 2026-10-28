@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 93d306e3b0a75e6408bbf50f294a4603
+guid: e88dfac627733884cb6ccce54da0c752
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -260143289322994722
-    second: Sello_Aprobado_0
+      213: -281852172580574180
+    second: Sello_Memorando_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 2
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -113,12 +113,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Sello_Aprobado_0
+      name: Sello_Memorando_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1170
+        width: 1316
         height: 242
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ed383318e09c36cf0800000000000000
-      internalID: -260143289322994722
+      spriteID: c1ca92e31f8a61cf0800000000000000
+      internalID: -281852172580574180
       vertices: []
       indices: 
       edges: []
