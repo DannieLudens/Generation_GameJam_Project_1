@@ -128,8 +128,10 @@ public class PlayerController : MonoBehaviour
             }
             gameOver = true;
             Debug.Log("¡Game Over! + " + distance);
+
         }
 
+        //timer is never over 90 sec.
         if (timer >= 90f) 
         {
             timer = 90;
