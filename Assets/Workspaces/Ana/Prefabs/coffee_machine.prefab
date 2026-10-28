@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1024272249676187938}
   - component: {fileID: 6769934655840940096}
   m_Layer: 0
-  m_Name: Coffee_machine
+  m_Name: coffee_machine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -113,7 +113,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 5
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 7424235558637074824, guid: f1cd6800d51724d4291ee22764292e86, type: 3}
 --- !u!65 &6698362821858860741
@@ -149,7 +149,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8190b8ee2825674b8b0aff7c6598f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoveBackward
-  speed: 15
   zLimit: -3
   rotationSpeed: 90
 --- !u!54 &6769934655840940096
