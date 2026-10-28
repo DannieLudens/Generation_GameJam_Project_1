@@ -1,8 +1,11 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 
 /// AudioManager de Never-Ending Monday (T26).
-/// - Música en loop + capa drone que sube cuando queda poco tiempo.
+/// - Música por modo: menú (loop), juego (playlist aleatoria sin cortes) y stinger de Game Over.
+/// - Capa drone que sube cuando queda poco tiempo (solo en el modo juego).
 /// - SFX y UI con una línea: AudioManager.Instance.PlaySFX(clip);
 /// - Volúmenes de música y efectos para el panel de pausa/configuración (se guardan en PlayerPrefs).
 /// Requiere un Audio Mixer con grupos Music, SFX y UI, y los parámetros expuestos
@@ -20,8 +23,23 @@ public class AudioManager : MonoBehaviour
     public AudioMixerGroup sfxGroup;
     public AudioMixerGroup uiGroup;
 
-    [Header("Música")]
+    public enum MusicMode { None, Menu, Gameplay, Stinger, Leaderboard }
+
+    [Header("Música por modo")]
+    [Tooltip("Música del menú principal (en loop). Ej: la Slower Version.")]
+    public AudioClip menuMusic;
+    [Tooltip("Música del leaderboard (en loop). Si la dejas vacía, usa la del menú.")]
+    public AudioClip leaderboardMusic;
+    [Tooltip("Pistas del juego: suenan una tras otra en orden aleatorio, sin cortes y sin repetir la misma seguida.")]
+    public AudioClip[] gameplayPlaylist;
+    [Tooltip("Respaldo: si la playlist está vacía, el juego usa este loop.")]
     public AudioClip musicLoop;
+    [Tooltip("Pieza que cierra la música al ser despedido (3er memorando).")]
+    public AudioClip gameOverStinger;
+    [Tooltip("Qué música arranca al dar Play en esta escena.")]
+    public MusicMode startMode = MusicMode.Gameplay;
+
+    [Header("Tensión")]
     public AudioClip droneLoop;
     [Range(0f, 1f)] public float musicVolume = 0.8f;
     [Tooltip("Volumen máximo de la capa drone cuando la tensión es 1.")]
@@ -40,7 +58,12 @@ public class AudioManager : MonoBehaviour
     const string MusicKey = "vol_music";
     const string SfxKey = "vol_sfx";
 
-    AudioSource musicSource, droneSource, uiSource;
+    AudioSource[] musicSources;   // 2 para encadenar pistas sin cortes
+    AudioSource droneSource, uiSource;
+    public MusicMode Mode { get; private set; } = MusicMode.None;
+    int playingSrc, lastTrack = -1;
+    double nextSwitchDsp;         // momento exacto (reloj de audio) en que entra la siguiente pista
+    Coroutine stingerRoutine;
     AudioSource[] sfxSources;
     int nextSfx;
     float tensionTarget, tension;
@@ -55,7 +78,7 @@ public class AudioManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        musicSource = NewSource("Music", musicGroup, true);
+        musicSources = new[] { NewSource("Music_A", musicGroup, false), NewSource("Music_B", musicGroup, false) };
         droneSource = NewSource("Drone", droneGroup != null ? droneGroup : musicGroup, true);
         uiSource = NewSource("UI", uiGroup, false);
         sfxSources = new AudioSource[sfxVoices];
@@ -72,7 +95,12 @@ public class AudioManager : MonoBehaviour
         // Aplica los volúmenes guardados del jugador encima de esa mezcla
         SetMusicVolume(PlayerPrefs.GetFloat(MusicKey, 1f));
         SetSFXVolume(PlayerPrefs.GetFloat(SfxKey, 1f));
-        PlayMusic();
+        switch (startMode)
+        {
+            case MusicMode.Menu: PlayMenuMusic(); break;
+            case MusicMode.Leaderboard: PlayLeaderboardMusic(); break;
+            case MusicMode.Gameplay: PlayGameplayMusic(); break;
+        }
     }
 
     void Update()
@@ -81,8 +109,17 @@ public class AudioManager : MonoBehaviour
         // el drone sube y la música baja al mismo tiempo.
         tension = Mathf.MoveTowards(tension, tensionTarget, tensionFadeSpeed * Time.unscaledDeltaTime);
         droneSource.volume = tension * droneMaxVolume;
-        float music = musicVolume * (1f - tension * musicDuck);
-        musicSource.volume = paused ? music * 0.4f : music;
+        float music = Mode == MusicMode.Stinger ? musicVolume : musicVolume * (1f - tension * musicDuck);
+        if (paused) music *= 0.4f;
+        foreach (var src in musicSources) src.volume = music;
+
+        // Playlist: cuando entra la pista ya programada, se programa la siguiente en la otra fuente
+        if (Mode == MusicMode.Gameplay && gameplayPlaylist != null && gameplayPlaylist.Length > 0
+            && AudioSettings.dspTime >= nextSwitchDsp)
+        {
+            playingSrc = 1 - playingSrc;
+            ScheduleNextTrack(1 - playingSrc, nextSwitchDsp + Length(musicSources[playingSrc].clip));
+        }
     }
 
     AudioSource NewSource(string name, AudioMixerGroup group, bool loop)
@@ -99,15 +136,46 @@ public class AudioManager : MonoBehaviour
 
     // ---------- Música ----------
 
-    public void PlayMusic()
+    /// Menú principal: loop de la versión lenta, sin drone.
+    public void PlayMenuMusic() => PlayLoop(MusicMode.Menu, menuMusic);
+
+    /// Leaderboard: su propia pista en loop (o la del menú si no hay).
+    public void PlayLeaderboardMusic() =>
+        PlayLoop(MusicMode.Leaderboard, leaderboardMusic != null ? leaderboardMusic : menuMusic);
+
+    void PlayLoop(MusicMode mode, AudioClip clip)
     {
-        if (musicLoop != null && !musicSource.isPlaying)
+        if (Mode == mode) return; // ya está sonando: no reinicia la canción
+        StopMusic();
+        Mode = mode;
+        if (clip == null) return;
+        musicSources[0].clip = clip;
+        musicSources[0].loop = true;
+        musicSources[0].Play();
+    }
+
+    /// Partida: playlist aleatoria encadenada sin cortes + drone en silencio listo para subir.
+    public void PlayGameplayMusic()
+    {
+        StopMusic();
+        Mode = MusicMode.Gameplay;
+
+        if (gameplayPlaylist != null && gameplayPlaylist.Length > 0)
         {
-            musicSource.clip = musicLoop;
-            musicSource.volume = musicVolume;
-            musicSource.Play();
+            double start = AudioSettings.dspTime + 0.1;
+            playingSrc = 0;
+            ScheduleNextTrack(0, start);                                   // primera pista
+            ScheduleNextTrack(1, start + Length(musicSources[0].clip));    // la que sigue
+            nextSwitchDsp = start + Length(musicSources[0].clip);
         }
-        if (droneLoop != null && !droneSource.isPlaying)
+        else if (musicLoop != null)
+        {
+            musicSources[0].clip = musicLoop;
+            musicSources[0].loop = true;
+            musicSources[0].Play();
+        }
+
+        if (droneLoop != null)
         {
             droneSource.clip = droneLoop;
             droneSource.volume = 0f;
@@ -115,12 +183,61 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    /// Por compatibilidad con código anterior.
+    public void PlayMusic() => PlayGameplayMusic();
+
+    /// 3er memorando: corta la música, suena el stinger una vez y avisa cuando termina.
+    /// Ejemplo: AudioManager.Instance.PlayGameOverStinger(() => SceneManager.LoadScene("GameOver"));
+    /// Devuelve la duración del stinger (por si quieren sincronizar una animación).
+    public float PlayGameOverStinger(Action onFinished = null)
+    {
+        StopMusic();
+        Mode = MusicMode.Stinger;
+        if (gameOverStinger == null) { onFinished?.Invoke(); return 0f; }
+
+        musicSources[0].clip = gameOverStinger;
+        musicSources[0].loop = false;
+        musicSources[0].Play();
+        float len = (float)Length(gameOverStinger);
+        stingerRoutine = StartCoroutine(AfterStinger(len, onFinished));
+        return len;
+    }
+
+    IEnumerator AfterStinger(float seconds, Action onFinished)
+    {
+        yield return new WaitForSecondsRealtime(seconds); // funciona aunque el juego esté en timeScale 0
+        stingerRoutine = null;
+        onFinished?.Invoke();
+    }
+
     public void StopMusic()
     {
-        musicSource.Stop();
+        if (stingerRoutine != null) { StopCoroutine(stingerRoutine); stingerRoutine = null; }
+        foreach (var src in musicSources) { src.Stop(); src.loop = false; }
         droneSource.Stop();
         tensionTarget = tension = 0f;
+        Mode = MusicMode.None;
     }
+
+    void ScheduleNextTrack(int src, double startDsp)
+    {
+        int i = PickTrack();
+        musicSources[src].clip = gameplayPlaylist[i];
+        musicSources[src].loop = false;
+        musicSources[src].PlayScheduled(startDsp);
+    }
+
+    int PickTrack()
+    {
+        int n = gameplayPlaylist.Length;
+        int i = UnityEngine.Random.Range(0, n);
+        if (n > 1) while (i == lastTrack) i = UnityEngine.Random.Range(0, n);
+        lastTrack = i;
+        return i;
+    }
+
+    // Duración exacta en segundos (más precisa que clip.length para encadenar)
+    static double Length(AudioClip c) => c == null ? 0 : (double)c.samples / c.frequency;
 
     /// 0 = solo música, 1 = drone al máximo y música abajo.
     /// Quien sepa cuánto falta para el jefe (DayManager) lo llama cada frame, por ejemplo:
@@ -163,7 +280,7 @@ public class AudioManager : MonoBehaviour
         var s = sfxSources[nextSfx];
         nextSfx = (nextSfx + 1) % sfxSources.Length;
         s.outputAudioMixerGroup = group != null ? group : sfxGroup;
-        s.pitch = 1f + Random.Range(-pitchVariation, pitchVariation);
+        s.pitch = 1f + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
         s.PlayOneShot(clip, volume);
     }
 

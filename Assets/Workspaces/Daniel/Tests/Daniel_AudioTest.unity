@@ -1124,7 +1124,7 @@ MonoBehaviour:
   speedPerDay: 0.5
   maxSpeed: 18
   playerAnimator: {fileID: 116706734}
-  calendarTear: {fileID: 0}
+  calendarTear: {fileID: 8300000, guid: 5a76962b1f3605940a53b89afe6fbbb1, type: 3}
   tearVolume: 1
   baseDayDistance: 600
   distancePerDay: 50
@@ -1178,11 +1178,14 @@ MonoBehaviour:
   maxTime: 90
   running: 1
   clockGood: {fileID: 0}
-  bossGreen: {fileID: 0}
-  memoStamp: {fileID: 0}
-  calendarTear: {fileID: 0}
+  bossGreen: {fileID: 8300000, guid: bb8b76897199e8641a81cbe115089976, type: 3}
+  bossRed: {fileID: 8300000, guid: 11a62d246f69d2b429ba87b90b899034, type: 3}
+  memoStamp: {fileID: 8300000, guid: aef4e9a76236fc24089723ef1e0c035f, type: 3}
+  memoDelay: 0.4
+  calendarTear: {fileID: 8300000, guid: 5a76962b1f3605940a53b89afe6fbbb1, type: 3}
   uiHover: {fileID: 8300000, guid: e6e5af4abad83a74789d4b5a7320168c, type: 3}
   uiClick: {fileID: 8300000, guid: 8c08516455926af45806484d4ae17d4d, type: 3}
+  maxMemos: 3
 --- !u!4 &1137420582
 Transform:
   m_ObjectHideFlags: 0
