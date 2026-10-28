@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
         //check if a day has passed.
         if (distance >= bossDistance)
         {
-            timer += 60;
+            timer = 60;
             ChangeCicle();
 
         };
