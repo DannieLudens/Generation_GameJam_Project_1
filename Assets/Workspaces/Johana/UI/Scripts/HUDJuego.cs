@@ -123,7 +123,7 @@ public class HUDJuego : MonoBehaviour
     // cuando llega a tiempo donde el jefe
     public void MostrarATiempo(int diaNuevo)
     {
-        textoATiempo.text = "+1:00  ·  Día " + diaNuevo;
+        textoATiempo.text = "Reloj en 1:00  ·  Día " + diaNuevo;
         StartCoroutine(ATiempo());
     }
 
