@@ -58,8 +58,13 @@ MonoBehaviour:
   musicLoop: {fileID: 8300000, guid: 3080acc0175bdc240829c8cda02be629, type: 3}
   gameOverStinger: {fileID: 8300000, guid: 0d6472ee369a0874aab61434ffd44afb, type: 3}
   startMode: 2
+  autoMusicByScene: 1
+  menuSceneName: Titulo
+  leaderboardSceneName: Leaderboard
+  uiHover: {fileID: 8300000, guid: e6e5af4abad83a74789d4b5a7320168c, type: 3}
+  uiClick: {fileID: 8300000, guid: 8c08516455926af45806484d4ae17d4d, type: 3}
   droneLoop: {fileID: 8300000, guid: 37786e6ad53ff7b498eb3b62e753f099, type: 3}
-  musicVolume: 0.28
+  musicVolume: 0.281
   droneMaxVolume: 1
   musicDuck: 0.7
   tensionFadeSpeed: 1
