@@ -1406,6 +1406,62 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
   m_Asset: {fileID: 346790370}
   m_ActionId: c95b2375-e6d9-4b88-9c4c-c5e76515df4b
+--- !u!1 &1249964344
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1249964346}
+  - component: {fileID: 1249964345}
+  m_Layer: 0
+  m_Name: Level Generator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1249964345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249964344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87c37837d5bc00344ba52591dc43f01b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelGenerator
+  chunkPrefabs:
+  - {fileID: 4321839858304883975, guid: 5746420280763e24dbb085966ea27aa9, type: 3}
+  - {fileID: 4026570082477885353, guid: 2bdd6c45ca064f64cb51c20051d5c6a8, type: 3}
+  - {fileID: 4026570082477885353, guid: 2bdd6c45ca064f64cb51c20051d5c6a8, type: 3}
+  - {fileID: 3360812870533553466, guid: 0aae256393182fa4ebf794b359fc2b21, type: 3}
+  - {fileID: 7298936666202077004, guid: 43b219210fbeb8d44ba789775223e66a, type: 3}
+  - {fileID: 7731113280774207462, guid: 030f232e7dacec344a9eacc45a29ae23, type: 3}
+  - {fileID: 3360812870533553466, guid: 0aae256393182fa4ebf794b359fc2b21, type: 3}
+  startingChunksAmount: 12
+  chunkParent: {fileID: 0}
+  chunkLenght: 10
+  moveSpeed: 8
+--- !u!4 &1249964346
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249964344}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2, y: -0.027918339, z: 0.44}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1655611688
 GameObject:
   m_ObjectHideFlags: 0
@@ -2284,3 +2340,4 @@ SceneRoots:
   - {fileID: 1994777810}
   - {fileID: 1655611690}
   - {fileID: 1691294535}
+  - {fileID: 1249964346}
