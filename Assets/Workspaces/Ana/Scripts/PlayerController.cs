@@ -18,13 +18,14 @@ public class PlayerController : MonoBehaviour
     private float discountLover = 4f;
     private float discountCoffeeMachine = 3f;
     public static bool gameOver;
-    public float distance;
+    public static float distance;
     public static float speed; //initial speed based on Drive board.
-    float bossDistance = 600; //Inicial goal based on Drive board. 
+    public static float bossDistance; //Inicial goal based on Drive board. 
     public int memos;
     public static float obstacleDistance;
     public static float clockProbability;
     public int cicle = 0;
+    public static float playerZpos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,6 +34,9 @@ public class PlayerController : MonoBehaviour
         speed = 12f; //initial speed based on Drive board.
         obstacleDistance = 30f; // Inicial obstacle distance based on Drive board.
         clockProbability = 40f; // initial probability based on Drive board.
+        distance = 0;//Inicial goal based on Drive board. 
+        bossDistance = 600;
+        playerZpos = 0.44f;
 
 
         //Places player on the center of center line. 
@@ -96,6 +100,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         //Character moves based on input
         ChangeLine();
 
